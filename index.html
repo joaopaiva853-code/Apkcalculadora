@@ -1,300 +1,314 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+  <!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora Pro v4.2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NeoCalc Pro | Red & Black Edition</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(-45deg, #0f2027, #203a43, #2c5364);
-            --panel-bg: #121212;
-            --btn-default: #1e1e1e;
-            --btn-op: #2196f3;
-            --btn-eq: #4caf50;
-            --btn-clear: #f44336;
-            --text-accent: #90caf9;
+            --bg-dark: #000000;
+            --glass-bg: rgba(15, 5, 5, 0.8);
+            --glass-border: rgba(255, 0, 0, 0.15);
+            --neon-red: #ff3131;
+            --dark-red: #8b0000;
+            --text-main: #ffffff;
+            --btn-bg: rgba(255, 255, 255, 0.04);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            height: 100vh;
-            width: 100vw;
-            background: var(--bg-gradient);
-            background-size: 400% 400%;
-            animation: bg-anim 15s ease infinite;
+        html, body {
+            height: 100%;
+            width: 100%;
             overflow: hidden;
-            display: flex;
+            background: var(--bg-dark);
         }
 
-        @keyframes bg-anim {
-            0% { background-position: 0% 50% }
-            50% { background-position: 100% 50% }
-            100% { background-position: 0% 50% }
-        }
-
-        .app {
-            width: 100vw;
-            height: 100vh;
-            background: var(--panel-bg);
-            display: flex;
-            flex-direction: column;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-        }
-
-        /* Topo: Calendário e Relógio */
-        .header-top {
-            padding-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .calendar-box {
-            color: var(--text-accent);
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .clock {
-            color: #fff;
-            font-family: monospace;
-            font-size: 1.1rem;
-            background: rgba(255,255,255,0.05);
-            padding: 4px 10px;
-            border-radius: 8px;
-        }
-
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-            font-size: 0.75rem;
-            color: #666;
-        }
-
-        .display-container {
-            background: #000;
-            padding: 30px 20px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: flex-end;
-            box-shadow: inset 0 2px 15px rgba(255,255,255,0.03);
-            border: 1px solid #1a1a1a;
-        }
-
-        .history { color: #546e7a; font-size: 1.2rem; margin-bottom: 8px; min-height: 1.4em; }
-        .current { 
-            color: #fff; 
-            font-size: 3.5rem; 
-            font-family: monospace; 
-            word-break: break-all;
-            line-height: 1;
-        }
-
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            flex-grow: 1;
-            padding-bottom: 20px;
-        }
-
-        button {
-            border: none;
-            border-radius: 18px;
-            background: var(--btn-default);
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.1s ease;
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            user-select: none;
-            box-shadow: 0 4px 0 #000;
+            /* Gradiente animado em tons de preto e vermelho profundo */
+            background: linear-gradient(-45deg, #000000, #1a0000, #330000, #000000);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
         }
 
-        button:active { 
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #000;
-            filter: brightness(1.3);
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-shell {
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
+        }
+
+        /* Painel de Vidro Negro */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            box-shadow: 0 25px 60px -12px rgba(255, 0, 0, 0.15);
+            
+            width: 100%;
+            max-width: 380px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: appEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes appEntry {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Relógio Digital Vermelho Neon */
+        .digital-clock-container {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 24px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+        }
+
+        #clock {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--neon-red);
+            text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
+            letter-spacing: 2px;
+        }
+
+        /* Display da Calculadora */
+        .display-area {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 28px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 120px;
+            border: 1px solid rgba(255, 0, 0, 0.05);
+            box-shadow: inset 0 2px 15px rgba(0,0,0,0.8);
+        }
+
+        .history {
+            font-size: 1.1rem;
+            color: #550000; /* Vermelho sangue escuro para o histórico */
+            min-height: 26px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .main-number {
+            font-size: 3rem;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            text-align: right;
+            width: 100%;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Grade de Botões */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        button {
+            aspect-ratio: 1;
+            border-radius: 22px;
+            border: none;
+            background: var(--btn-bg);
+            color: var(--text-main);
+            font-size: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        button:active {
+            transform: scale(0.88);
+            background: rgba(255, 0, 0, 0.15);
+        }
+
+        /* Botões de Operação e Especiais */
+        .btn-op { 
+            color: var(--neon-red); 
+            background: rgba(255, 49, 49, 0.08); 
         }
         
-        .op { background: var(--btn-op); }
-        .eq { background: var(--btn-eq); grid-column: span 2; }
-        .clear { background: var(--btn-clear); }
+        .btn-clear { 
+            color: #ff0000; 
+            background: rgba(255, 0, 0, 0.12);
+            font-weight: bold;
+        }
+        
+        .btn-equal {
+            grid-column: span 2;
+            aspect-ratio: auto;
+            background: linear-gradient(135deg, #ff0000, #8b0000);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 8px 20px -5px rgba(255, 0, 0, 0.4);
+            border: none;
+        }
 
-        .footer {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #333;
-            padding-bottom: 10px;
-            letter-spacing: 1px;
+        .btn-zero {
+            grid-column: span 2;
+            aspect-ratio: auto;
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-height: 700px) {
+            .glass-panel { padding: 18px; gap: 12px; }
+            .display-area { min-height: 90px; padding: 15px; }
+            .main-number { font-size: 2.2rem; }
+            button { border-radius: 16px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <!-- Novo Topo com Calendário em destaque -->
-    <div class="header-top">
-        <div class="calendar-box" id="dateText">--/--/--</div>
-        <div class="clock" id="clock">00:00:00</div>
+    <div class="app-shell">
+        <div class="glass-panel">
+            <div class="digital-clock-container">
+                <div id="clock">00:00:00</div>
+            </div>
+
+            <div class="display-area">
+                <div class="history" id="history"></div>
+                <div class="main-number" id="result">0</div>
+            </div>
+
+            <div class="keypad">
+                <button class="btn-clear" onclick="clearAll()">AC</button>
+                <button onclick="deleteLast()">⌫</button>
+                <button class="btn-op" onclick="setOp('/')">÷</button>
+                <button class="btn-op" onclick="setOp('*')">×</button>
+                
+                <button onclick="addNum('7')">7</button>
+                <button onclick="addNum('8')">8</button>
+                <button onclick="addNum('9')">9</button>
+                <button class="btn-op" onclick="setOp('-')">−</button>
+                
+                <button onclick="addNum('4')">4</button>
+                <button onclick="addNum('5')">5</button>
+                <button onclick="addNum('6')">6</button>
+                <button class="btn-op" onclick="setOp('+')">+</button>
+                
+                <button onclick="addNum('1')">1</button>
+                <button onclick="addNum('2')">2</button>
+                <button onclick="addNum('3')">3</button>
+                <button class="btn-equal" onclick="calculate()">=</button>
+                
+                <button class="btn-zero" onclick="addNum('0')">0</button>
+                <button onclick="addNum('.')">.</button>
+            </div>
+        </div>
     </div>
 
-    <div class="sub-header">
-        <span id="soundToggle" style="cursor:pointer">🔊 SOM: ON</span>
-        <span>CALCULADORA PRO</span>
-    </div>
-
-    <div class="display-container">
-        <div class="history" id="history"></div>
-        <div class="current" id="display">0</div>
-    </div>
-
-    <div class="buttons">
-        <button class="clear" onclick="clearAll()">C</button>
-        <button onclick="backspace()">⌫</button>
-        <button class="op" onclick="addOp('/')">÷</button>
-        <button class="op" onclick="addOp('*')">×</button>
-
-        <button onclick="addNum('7')">7</button>
-        <button onclick="addNum('8')">8</button>
-        <button onclick="addNum('9')">9</button>
-        <button class="op" onclick="addOp('-')">-</button>
-
-        <button onclick="addNum('4')">4</button>
-        <button onclick="addNum('5')">5</button>
-        <button onclick="addNum('6')">6</button>
-        <button class="op" onclick="addOp('+')">+</button>
-
-        <button onclick="addNum('1')">1</button>
-        <button onclick="addNum('2')">2</button>
-        <button onclick="addNum('3')">3</button>
-        <button onclick="addNum('.')">.</button>
-
-        <button onclick="addNum('0')">0</button>
-        <button class="eq" onclick="calculate()">=</button>
-    </div>
-
-    <div class="footer">ENGINE V4.2 • 2026</div>
-</div>
-
-<script>
-    const display = document.getElementById("display");
-    const history = document.getElementById("history");
-    const soundBtn = document.getElementById("soundToggle");
-    
-    let currentInput = "0";
-    let soundOn = true;
-    let audioCtx;
-
-    function playClick() {
-        if (!soundOn) return;
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-    }
-
-    soundBtn.onclick = () => {
-        soundOn = !soundOn;
-        soundBtn.innerText = soundOn ? "🔊 SOM: ON" : "🔇 SOM: OFF";
-    };
-
-    function updateDisplay() {
-        display.innerText = currentInput;
-    }
-
-    function addNum(num) {
-        playClick();
-        if (currentInput === "0" && num !== ".") currentInput = num;
-        else if (currentInput.length < 18) currentInput += num;
-        updateDisplay();
-    }
-
-    function addOp(op) {
-        playClick();
-        const lastChar = currentInput.slice(-1);
-        if (["+", "-", "*", "/"].includes(lastChar)) {
-            currentInput = currentInput.slice(0, -1) + op;
-        } else {
-            if(currentInput !== "Erro") currentInput += op;
+    <script>
+        // --- RELÓGIO ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR');
         }
-        updateDisplay();
-    }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-    function clearAll() {
-        playClick();
-        currentInput = "0";
-        history.innerText = "";
-        updateDisplay();
-    }
+        // --- LÓGICA DA CALCULADORA ---
+        let currentInput = '0';
+        let previousInput = '';
+        let operation = null;
+        const resultDisplay = document.getElementById('result');
+        const historyDisplay = document.getElementById('history');
 
-    function backspace() {
-        playClick();
-        if(currentInput === "Erro") currentInput = "0";
-        else currentInput = currentInput.slice(0, -1) || "0";
-        updateDisplay();
-    }
-
-    function calculate() {
-        playClick();
-        try {
-            // Substitui os símbolos visuais por operadores reais
-            const expression = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
-            const result = new Function(`return ${expression}`)();
-            
-            history.innerText = currentInput + " =";
-            
-            if (!isFinite(result)) {
-                currentInput = "Erro";
+        function updateUI() {
+            resultDisplay.textContent = currentInput;
+            if (operation) {
+                const opMap = {'/': '÷', '*': '×', '+': '+', '-': '−'};
+                historyDisplay.textContent = `${previousInput} ${opMap[operation]}`;
             } else {
-                // Formata o resultado para não quebrar a tela
-                currentInput = Number.isInteger(result) ? 
-                    result.toString() : 
-                    parseFloat(result.toFixed(8)).toString();
+                historyDisplay.textContent = '';
             }
-        } catch {
-            currentInput = "Erro";
         }
-        updateDisplay();
-    }
 
-    function updateDateTime() {
-        const now = new Date();
-        // Relógio
-        document.getElementById("clock").innerText = now.toLocaleTimeString('pt-BR');
-        // Calendário no topo
-        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-        document.getElementById("dateText").innerText = now.toLocaleDateString('pt-BR', options);
-    }
+        function addNum(num) {
+            if (currentInput === '0' && num !== '.') {
+                currentInput = num;
+            } else {
+                if (num === '.' && currentInput.includes('.')) return;
+                if (currentInput.length < 12) currentInput += num;
+            }
+            updateUI();
+        }
 
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-</script>
+        function setOp(op) {
+            if (currentInput === '0' && previousInput === '') return;
+            if (previousInput !== '') calculate();
+            operation = op;
+            previousInput = currentInput;
+            currentInput = '0';
+            updateUI();
+        }
 
+        function clearAll() {
+            currentInput = '0';
+            previousInput = '';
+            operation = null;
+            updateUI();
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1) || '0';
+            updateUI();
+        }
+
+        function calculate() {
+            let res;
+            const prev = parseFloat(previousInput);
+            const curr = parseFloat(currentInput);
+            if (isNaN(prev) || isNaN(curr)) return;
+
+            switch (operation) {
+                case '+': res = prev + curr; break;
+                case '-': res = prev - curr; break;
+                case '*': res = prev * curr; break;
+                case '/': res = curr === 0 ? 'Erro' : prev / curr; break;
+                default: return;
+            }
+
+            currentInput = String(res).slice(0, 12);
+            operation = null;
+            previousInput = '';
+            updateUI();
+        }
+    </script>
 </body>
 </html>
+  

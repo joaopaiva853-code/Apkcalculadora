@@ -1,314 +1,639 @@
-  <!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NeoCalc Pro | Red & Black Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nexus Calc | Calculadora Fullscreen Animada</title>
     <style>
-        :root {
-            --bg-dark: #000000;
-            --glass-bg: rgba(15, 5, 5, 0.8);
-            --glass-border: rgba(255, 0, 0, 0.15);
-            --neon-red: #ff3131;
-            --dark-red: #8b0000;
-            --text-main: #ffffff;
-            --btn-bg: rgba(255, 255, 255, 0.04);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            background: var(--bg-dark);
-        }
-
         body {
+            min-height: 100vh;
+            width: 100vw;
+            background: radial-gradient(circle at 20% 30%, #0a0f1c, #03060c);
             display: flex;
-            justify-content: center;
             align-items: center;
-            /* Gradiente animado em tons de preto e vermelho profundo */
-            background: linear-gradient(-45deg, #000000, #1a0000, #330000, #000000);
-            background-size: 400% 400%;
-            animation: gradientMove 12s ease infinite;
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .app-shell {
-            width: 100%;
-            height: 100dvh;
-            display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-top: env(safe-area-inset-top);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'SF Pro Text', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Painel de Vidro Negro */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px) saturate(150%);
-            -webkit-backdrop-filter: blur(25px) saturate(150%);
-            border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            box-shadow: 0 25px 60px -12px rgba(255, 0, 0, 0.15);
-            
+        /* ------------------------------------------------------------
+        ANIMAÇÃO DE FUNDO PROFISSIONAL - ONDAS DE ENERGIA + PARTÍCULAS
+        ------------------------------------------------------------ */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 380px;
-            padding: 24px;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatOrb 18s infinite alternate ease-in-out;
+        }
+
+        .orb1 { width: 60vw; height: 60vw; background: #2a3f6e; top: -20vh; left: -20vw; animation-duration: 22s; }
+        .orb2 { width: 50vw; height: 50vw; background: #4e2a6e; bottom: -10vh; right: -15vw; animation-duration: 25s; animation-delay: -3s; }
+        .orb3 { width: 45vw; height: 45vw; background: #1f6d5c; top: 40vh; left: 60vw; animation-duration: 19s; filter: blur(100px); opacity: 0.3; }
+        .orb4 { width: 30vw; height: 30vw; background: #b34e7a; bottom: 20vh; left: 10vw; animation-duration: 28s; opacity: 0.25; filter: blur(70px);}
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(8%, 12%) scale(1.2); }
+        }
+
+        /* grades de grid tecnológico sutil */
+        .grid-overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(60, 150, 220, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(60, 150, 220, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Partículas dinâmicas (canvas para fps suave) */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* CARD PRINCIPAL - AGORA OCUPA TELA TODA COM MARGENS ELEGANTES */
+        .calculator-card {
+            position: relative;
+            z-index: 20;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(12, 18, 28, 0.72);
+            backdrop-filter: blur(20px);
+            box-shadow: none;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: none;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            animation: appEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            justify-content: space-between;
         }
 
-        @keyframes appEntry {
-            from { opacity: 0; transform: scale(0.9) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        /* header premium ajustado para fullscreen */
+        .calc-header {
+            padding: 28px 28px 12px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.2);
         }
 
-        /* Relógio Digital Vermelho Neon */
-        .digital-clock-container {
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 24px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid rgba(255, 0, 0, 0.1);
-        }
-
-        #clock {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 1.8rem;
+        .date-badge {
+            font-size: 0.8rem;
             font-weight: 500;
-            color: var(--neon-red);
-            text-shadow: 0 0 15px rgba(255, 49, 49, 0.6);
+            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #b3e4ff;
+            backdrop-filter: blur(4px);
+            font-family: monospace;
+        }
+
+        .time-glow {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #ffffff, #90caf9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 6px rgba(33,150,243,0.3);
+        }
+
+        .status-area {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 28px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #8d9cb0;
+            letter-spacing: 1px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .sound-toggle {
+            background: rgba(255,255,255,0.08);
+            padding: 6px 16px;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .sound-toggle:active { background: rgba(255,255,255,0.2); }
+
+        /* display premium com reflexo - expandido */
+        .display-panel {
+            margin: 20px 28px;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 44px;
+            padding: 28px 28px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .history-area {
+            min-height: 42px;
+            font-size: 1.1rem;
+            color: #88a0bc;
+            text-align: right;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .current-value {
+            font-size: 4.2rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: #f0f9ff;
+            text-align: right;
+            word-break: break-word;
+            line-height: 1.2;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
             letter-spacing: 2px;
         }
 
-        /* Display da Calculadora */
-        .display-area {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 28px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            min-height: 120px;
-            border: 1px solid rgba(255, 0, 0, 0.05);
-            box-shadow: inset 0 2px 15px rgba(0,0,0,0.8);
-        }
-
-        .history {
-            font-size: 1.1rem;
-            color: #550000; /* Vermelho sangue escuro para o histórico */
-            min-height: 26px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .main-number {
-            font-size: 3rem;
-            color: var(--text-main);
-            font-family: 'JetBrains Mono', monospace;
-            text-align: right;
-            width: 100%;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Grade de Botões */
-        .keypad {
+        /* grade de botões - ocupa espaço flexível */
+        .buttons-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
+            padding: 20px 28px 35px;
+            flex: 1;
+            align-content: center;
         }
 
-        button {
-            aspect-ratio: 1;
-            border-radius: 22px;
+        .btn {
             border: none;
-            background: var(--btn-bg);
-            color: var(--text-main);
-            font-size: 1.5rem;
-            font-weight: 500;
+            border-radius: 32px;
+            padding: 20px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: rgba(20, 28, 38, 0.9);
+            color: #eef4ff;
+            transition: all 0.1s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
             display: flex;
-            justify-content: center;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            justify-content: center;
+            font-family: inherit;
+            letter-spacing: 0.5px;
         }
 
-        button:active {
-            transform: scale(0.88);
-            background: rgba(255, 0, 0, 0.15);
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+            filter: brightness(1.25);
         }
 
-        /* Botões de Operação e Especiais */
-        .btn-op { 
-            color: var(--neon-red); 
-            background: rgba(255, 49, 49, 0.08); 
-        }
-        
-        .btn-clear { 
-            color: #ff0000; 
-            background: rgba(255, 0, 0, 0.12);
-            font-weight: bold;
-        }
-        
-        .btn-equal {
-            grid-column: span 2;
-            aspect-ratio: auto;
-            background: linear-gradient(135deg, #ff0000, #8b0000);
-            color: white;
+        .operator {
+            background: linear-gradient(145deg, #1e4670, #0e2a46);
+            color: #b9e2ff;
             font-weight: 700;
-            box-shadow: 0 8px 20px -5px rgba(255, 0, 0, 0.4);
-            border: none;
+            box-shadow: 0 5px 0 #051a2c;
         }
 
-        .btn-zero {
+        .equal-btn {
+            background: linear-gradient(145deg, #2b7a4b, #1c5a38);
+            color: white;
             grid-column: span 2;
-            aspect-ratio: auto;
+            box-shadow: 0 5px 0 #0e3a22;
+            font-size: 2rem;
         }
 
-        /* Responsividade para telas menores */
-        @media (max-height: 700px) {
-            .glass-panel { padding: 18px; gap: 12px; }
-            .display-area { min-height: 90px; padding: 15px; }
-            .main-number { font-size: 2.2rem; }
-            button { border-radius: 16px; font-size: 1.3rem; }
+        .clear-btn {
+            background: linear-gradient(145deg, #8b3c3c, #6b2a2a);
+            color: #ffe0e0;
+            box-shadow: 0 5px 0 #4a1a1a;
+        }
+
+        .special {
+            background: rgba(65, 75, 95, 0.9);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #4e6079;
+            padding-bottom: 20px;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+            background: rgba(0,0,0,0.1);
+            padding-top: 8px;
+        }
+
+        /* responsivo para telas menores - botões proporcionais */
+        @media (max-width: 600px) {
+            .btn { padding: 14px 0; font-size: 1.5rem; }
+            .current-value { font-size: 3rem; }
+            .buttons-grid { gap: 10px; padding: 15px 20px 25px; }
+            .display-panel { margin: 15px 20px; padding: 20px; }
+            .calc-header { padding: 20px 20px 10px; }
+            .status-area { padding: 10px 20px; }
+            .time-glow { font-size: 1.2rem; }
+            .date-badge { font-size: 0.7rem; padding: 5px 12px; }
+        }
+
+        @media (max-width: 420px) {
+            .btn { padding: 12px 0; font-size: 1.3rem; }
+            .equal-btn { font-size: 1.6rem; }
+            .current-value { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
-        <div class="glass-panel">
-            <div class="digital-clock-container">
-                <div id="clock">00:00:00</div>
-            </div>
+<div class="animated-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="orb orb4"></div>
+</div>
+<div class="grid-overlay"></div>
+<canvas id="particleCanvas"></canvas>
 
-            <div class="display-area">
-                <div class="history" id="history"></div>
-                <div class="main-number" id="result">0</div>
-            </div>
-
-            <div class="keypad">
-                <button class="btn-clear" onclick="clearAll()">AC</button>
-                <button onclick="deleteLast()">⌫</button>
-                <button class="btn-op" onclick="setOp('/')">÷</button>
-                <button class="btn-op" onclick="setOp('*')">×</button>
-                
-                <button onclick="addNum('7')">7</button>
-                <button onclick="addNum('8')">8</button>
-                <button onclick="addNum('9')">9</button>
-                <button class="btn-op" onclick="setOp('-')">−</button>
-                
-                <button onclick="addNum('4')">4</button>
-                <button onclick="addNum('5')">5</button>
-                <button onclick="addNum('6')">6</button>
-                <button class="btn-op" onclick="setOp('+')">+</button>
-                
-                <button onclick="addNum('1')">1</button>
-                <button onclick="addNum('2')">2</button>
-                <button onclick="addNum('3')">3</button>
-                <button class="btn-equal" onclick="calculate()">=</button>
-                
-                <button class="btn-zero" onclick="addNum('0')">0</button>
-                <button onclick="addNum('.')">.</button>
-            </div>
-        </div>
+<div class="calculator-card">
+    <div class="calc-header">
+        <div class="date-badge" id="dateText">CARREGANDO...</div>
+        <div class="time-glow" id="clock">--:--:--</div>
+    </div>
+    <div class="status-area">
+        <span>⚡ NEXUS MODE • FULLSCREEN</span>
+        <span class="sound-toggle" id="soundToggle">🔊 SOM ON</span>
     </div>
 
-    <script>
-        // --- RELÓGIO ---
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR');
+    <div class="display-panel">
+        <div class="history-area" id="history"></div>
+        <div class="current-value" id="display">0</div>
+    </div>
+
+    <div class="buttons-grid">
+        <!-- Linha 1 -->
+        <button class="btn clear-btn" data-action="clear">AC</button>
+        <button class="btn special" data-action="backspace">⌫</button>
+        <button class="btn operator" data-op="/">÷</button>
+        <button class="btn operator" data-op="*">×</button>
+        <!-- Linha 2 -->
+        <button class="btn" data-num="7">7</button>
+        <button class="btn" data-num="8">8</button>
+        <button class="btn" data-num="9">9</button>
+        <button class="btn operator" data-op="-">–</button>
+        <!-- Linha 3 -->
+        <button class="btn" data-num="4">4</button>
+        <button class="btn" data-num="5">5</button>
+        <button class="btn" data-num="6">6</button>
+        <button class="btn operator" data-op="+">+</button>
+        <!-- Linha 4 -->
+        <button class="btn" data-num="1">1</button>
+        <button class="btn" data-num="2">2</button>
+        <button class="btn" data-num="3">3</button>
+        <button class="btn" data-num=".">.</button>
+        <!-- Linha 5 -->
+        <button class="btn" data-num="0">0</button>
+        <button class="btn equal-btn" data-action="equal">=</button>
+    </div>
+    <div class="footer-note">CRYSTAL ENGINE v3.0 • TOUCH OPTIMIZED</div>
+</div>
+
+<script>
+    // ------------------------------------------------
+    // DOM Elements
+    // ------------------------------------------------
+    const displayElem = document.getElementById('display');
+    const historyElem = document.getElementById('history');
+    const soundToggleBtn = document.getElementById('soundToggle');
+    
+    let currentInput = "0";
+    let lastExpression = "";
+    let soundEnabled = true;
+    let audioContext = null;
+
+    // sound system otimizado (beep curto e elegante)
+    function playClick() {
+        if (!soundEnabled) return;
+        try {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            // garantir que o contexto esteja ativo (resume automatico)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 880;
+            gainNode.gain.value = 0.12;
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+            osc.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            osc.start();
+            osc.stop(now + 0.1);
+        } catch(e) { console.warn("audio error", e); }
+    }
+
+    // atualizar display principal
+    function updateMainDisplay() {
+        displayElem.innerText = currentInput;
+    }
+
+    // validar e sanitizar
+    function sanitizeExpression(expr) {
+        expr = expr.replace(/×/g, '*').replace(/÷/g, '/');
+        // evitar múltiplos operadores consecutivos
+        expr = expr.replace(/([+\-*/])\s*([+\-*/])/g, (match, p1, p2) => p2);
+        // evitar começar com operador exceto - (negativo)
+        if (/^[+*/]/.test(expr)) expr = expr.slice(1);
+        // substituir . por 0. se for inicial isolado
+        if (expr === '.') expr = '0.';
+        return expr;
+    }
+
+    function addNum(value) {
+        playClick();
+        if (currentInput === "Erro") {
+            currentInput = "0";
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        if (currentInput === "0" && value !== '.') {
+            currentInput = value;
+        } else if (value === '.' && currentInput.includes('.')) {
+            return;
+        } else if (currentInput.length < 24) {
+            currentInput += value;
+        }
+        updateMainDisplay();
+    }
 
-        // --- LÓGICA DA CALCULADORA ---
-        let currentInput = '0';
-        let previousInput = '';
-        let operation = null;
-        const resultDisplay = document.getElementById('result');
-        const historyDisplay = document.getElementById('history');
+    function addOperator(op) {
+        playClick();
+        if (currentInput === "Erro") currentInput = "0";
+        const lastChar = currentInput.slice(-1);
+        const operators = ['+', '-', '*', '/', '×', '÷'];
+        if (operators.includes(lastChar)) {
+            // substituir ultimo operador
+            currentInput = currentInput.slice(0, -1) + op;
+        } else {
+            currentInput += op;
+        }
+        updateMainDisplay();
+    }
 
-        function updateUI() {
-            resultDisplay.textContent = currentInput;
-            if (operation) {
-                const opMap = {'/': '÷', '*': '×', '+': '+', '-': '−'};
-                historyDisplay.textContent = `${previousInput} ${opMap[operation]}`;
+    function clearAll() {
+        playClick();
+        currentInput = "0";
+        historyElem.innerText = "";
+        updateMainDisplay();
+    }
+
+    function backspace() {
+        playClick();
+        if (currentInput === "Erro") {
+            currentInput = "0";
+        } else if (currentInput.length > 1) {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === "") currentInput = "0";
+        } else {
+            currentInput = "0";
+        }
+        updateMainDisplay();
+    }
+
+    function calculateResult() {
+        playClick();
+        if (currentInput === "Erro") {
+            currentInput = "0";
+            updateMainDisplay();
+            return;
+        }
+        let expr = currentInput;
+        if (expr.trim() === "") {
+            return;
+        }
+        try {
+            let sanitized = sanitizeExpression(expr);
+            if (/[+\-*/]$/.test(sanitized)) {
+                sanitized = sanitized.slice(0, -1);
+            }
+            if (sanitized === "") {
+                return;
+            }
+            const result = new Function(`return (${sanitized})`)();
+            if (!isFinite(result) || isNaN(result)) {
+                throw new Error('Math error');
+            }
+            historyElem.innerText = currentInput + " =";
+            let finalResult;
+            if (Number.isInteger(result)) {
+                finalResult = result.toString();
             } else {
-                historyDisplay.textContent = '';
+                finalResult = parseFloat(result.toFixed(10)).toString();
+                if (finalResult.includes('e')) finalResult = result.toFixed(8);
             }
+            currentInput = finalResult;
+        } catch (error) {
+            currentInput = "Erro";
+            historyElem.innerText = expr + "  ⟶  erro";
         }
+        updateMainDisplay();
+    }
 
-        function addNum(num) {
-            if (currentInput === '0' && num !== '.') {
-                currentInput = num;
-            } else {
-                if (num === '.' && currentInput.includes('.')) return;
-                if (currentInput.length < 12) currentInput += num;
-            }
-            updateUI();
+    // eventos delegados para desempenho e responsividade
+    function handleButtonClick(e) {
+        let target = e.target.closest('.btn');
+        if (!target) return;
+        
+        const numVal = target.getAttribute('data-num');
+        const opVal = target.getAttribute('data-op');
+        const action = target.getAttribute('data-action');
+        
+        if (numVal !== null) {
+            addNum(numVal);
+        } else if (opVal !== null) {
+            addOperator(opVal);
+        } else if (action === 'clear') {
+            clearAll();
+        } else if (action === 'backspace') {
+            backspace();
+        } else if (action === 'equal') {
+            calculateResult();
         }
-
-        function setOp(op) {
-            if (currentInput === '0' && previousInput === '') return;
-            if (previousInput !== '') calculate();
-            operation = op;
-            previousInput = currentInput;
-            currentInput = '0';
-            updateUI();
+    }
+    
+    document.querySelector('.buttons-grid').addEventListener('click', handleButtonClick);
+    
+    // toggle sonoro profissional
+    soundToggleBtn.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        soundToggleBtn.innerHTML = soundEnabled ? "🔊 SOM ON" : "🔇 SOM OFF";
+        playClick(); // feedback ao mudar (se mudo não toca)
+        if (soundEnabled && audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
         }
-
-        function clearAll() {
-            currentInput = '0';
-            previousInput = '';
-            operation = null;
-            updateUI();
+    });
+    
+    // relógio e data atualizados com animação sutil
+    function updateDateTime() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('pt-BR', { hour12: false });
+        document.getElementById('clock').innerText = timeStr;
+        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+        const dateFormatted = now.toLocaleDateString('pt-BR', options).replace('.', '').toUpperCase();
+        document.getElementById('dateText').innerHTML = dateFormatted;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    
+    // =======================================================
+    // PARTÍCULAS ANIMADAS SOBRE O FUNDO (efeito profissional)
+    // =======================================================
+    const canvas = document.getElementById('particleCanvas');
+    let ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrame;
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.5 + 0.8;
+            this.speedX = (Math.random() - 0.5) * 0.35;
+            this.speedY = (Math.random() - 0.5) * 0.25 + 0.1;
+            this.opacity = Math.random() * 0.45 + 0.1;
+            this.color = `rgba(100, 180, 250, ${this.opacity})`;
         }
-
-        function deleteLast() {
-            currentInput = currentInput.slice(0, -1) || '0';
-            updateUI();
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x < -20) this.x = canvas.width + 20;
+            if (this.x > canvas.width + 20) this.x = -20;
+            if (this.y < -20) this.y = canvas.height + 20;
+            if (this.y > canvas.height + 20) this.y = -20;
         }
-
-        function calculate() {
-            let res;
-            const prev = parseFloat(previousInput);
-            const curr = parseFloat(currentInput);
-            if (isNaN(prev) || isNaN(curr)) return;
-
-            switch (operation) {
-                case '+': res = prev + curr; break;
-                case '-': res = prev - curr; break;
-                case '*': res = prev * curr; break;
-                case '/': res = curr === 0 ? 'Erro' : prev / curr; break;
-                default: return;
-            }
-
-            currentInput = String(res).slice(0, 12);
-            operation = null;
-            previousInput = '';
-            updateUI();
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
         }
-    </script>
+    }
+    
+    function initParticles() {
+        particles = [];
+        const particleCount = Math.min(100, Math.floor(window.innerWidth / 10));
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+    
+    function animateParticles() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+            p.update();
+            p.draw();
+        }
+        animationFrame = requestAnimationFrame(animateParticles);
+    }
+    
+    function handleResize() {
+        resizeCanvas();
+        initParticles();
+    }
+    
+    window.addEventListener('resize', () => {
+        handleResize();
+    });
+    
+    // iniciar sistema de partículas com transição suave
+    resizeCanvas();
+    initParticles();
+    animateParticles();
+    
+    // garantir contexto de áudio ativo na primeira interação (mobile)
+    const resumeAudioOnFirstTouch = () => {
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        document.body.removeEventListener('touchstart', resumeAudioOnFirstTouch);
+        document.body.removeEventListener('click', resumeAudioOnFirstTouch);
+    };
+    document.body.addEventListener('touchstart', resumeAudioOnFirstTouch);
+    document.body.addEventListener('click', resumeAudioOnFirstTouch);
+    
+    // suporte a teclado físico (com responsividade)
+    window.addEventListener('keydown', (e) => {
+        const key = e.key;
+        if ((key >= '0' && key <= '9') || key === '.') {
+            e.preventDefault();
+            addNum(key);
+        } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+            e.preventDefault();
+            let opMap = { '+': '+', '-': '-', '*': '×', '/': '÷' };
+            addOperator(opMap[key] || key);
+        } else if (key === 'Enter' || key === '=') {
+            e.preventDefault();
+            calculateResult();
+        } else if (key === 'Backspace') {
+            e.preventDefault();
+            backspace();
+        } else if (key === 'Escape' || key === 'Delete') {
+            e.preventDefault();
+            clearAll();
+        }
+    });
+    
+    // pequeno brilho intermitente no display (efeito suave)
+    setInterval(() => {
+        if (soundEnabled && audioContext && audioContext.state !== 'running') {
+            // apenas manutenção silenciosa
+        }
+    }, 8000);
+</script>
 </body>
-</html>
-  
+</html>  

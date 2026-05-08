@@ -2,638 +2,635 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nexus Calc | Calculadora Fullscreen Animada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>JB Financeiro</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JB Financeiro">
+    <meta name="theme-color" content="#6c5ce7">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
         }
-
         body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3436;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             min-height: 100vh;
-            width: 100vw;
-            background: radial-gradient(circle at 20% 30%, #0a0f1c, #03060c);
+            background-attachment: fixed;
+        }
+        .app {
+            width: 100%;
+            max-width: 500px;
+            padding: 25px 16px 30px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #2d3436;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'SF Pro Text', sans-serif;
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
+            letter-spacing: -0.5px;
         }
-
-        /* ------------------------------------------------------------
-        ANIMAÇÃO DE FUNDO PROFISSIONAL - ONDAS DE ENERGIA + PARTÍCULAS
-        ------------------------------------------------------------ */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
         }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            animation: floatOrb 18s infinite alternate ease-in-out;
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 18px 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .orb1 { width: 60vw; height: 60vw; background: #2a3f6e; top: -20vh; left: -20vw; animation-duration: 22s; }
-        .orb2 { width: 50vw; height: 50vw; background: #4e2a6e; bottom: -10vh; right: -15vw; animation-duration: 25s; animation-delay: -3s; }
-        .orb3 { width: 45vw; height: 45vw; background: #1f6d5c; top: 40vh; left: 60vw; animation-duration: 19s; filter: blur(100px); opacity: 0.3; }
-        .orb4 { width: 30vw; height: 30vw; background: #b34e7a; bottom: 20vh; left: 10vw; animation-duration: 28s; opacity: 0.25; filter: blur(70px);}
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(8%, 12%) scale(1.2); }
+        .card:active { transform: scale(0.97); }
+        .card h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.7;
         }
-
-        /* grades de grid tecnológico sutil */
-        .grid-overlay {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(60, 150, 220, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(60, 150, 220, 0.08) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 1;
+        .card .valor {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.2;
         }
-
-        /* Partículas dinâmicas (canvas para fps suave) */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* CARD PRINCIPAL - AGORA OCUPA TELA TODA COM MARGENS ELEGANTES */
-        .calculator-card {
-            position: relative;
-            z-index: 20;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(12, 18, 28, 0.72);
-            backdrop-filter: blur(20px);
-            box-shadow: none;
-            overflow: hidden;
-            transition: all 0.2s ease;
+        .receita h3 { color: #00b894; }
+        .receita .valor { color: #00b894; }
+        .despesa h3 { color: #e17055; }
+        .despesa .valor { color: #e17055; }
+        .compra h3 { color: #fdcb6e; }
+        .compra .valor { color: #e17055; }
+        .saldo {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
             border: none;
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.3);
+        }
+        .saldo h3 { color: rgba(255,255,255,0.8); }
+        .saldo .valor { color: white; font-size: 2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+        .btn-flutuante {
+            position: fixed;
+            bottom: 30px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+            border: none;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        .btn-flutuante:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(108, 92, 231, 0.6);
+        }
+        .btn-flutuante:active { transform: scale(0.9); }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .form-header {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid transparent;
+            transition: background 0.2s;
+            color: #2d3436;
+        }
+        .form-header:hover { background: rgba(108, 92, 231, 0.05); }
+        .form-header .icon-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .form-card.aberto .form-header {
+            border-bottom: 1px solid rgba(108, 92, 231, 0.15);
+        }
+        .form-card.aberto .form-header .icon-toggle {
+            transform: rotate(45deg);
+            background: linear-gradient(135deg, #e17055, #d63031);
+        }
+        .form-body {
+            padding: 0 20px 20px;
+            display: none;
+        }
+        .form-card.aberto .form-body {
+            display: block;
+        }
+        .input-row {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 16px;
         }
-
-        /* header premium ajustado para fullscreen */
-        .calc-header {
-            padding: 28px 28px 12px 28px;
+        .input-group {
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            background: rgba(0,0,0,0.2);
+            flex-direction: column;
+            gap: 6px;
         }
-
-        .date-badge {
+        .input-group label {
             font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 18px;
-            border-radius: 40px;
-            color: #b3e4ff;
-            backdrop-filter: blur(4px);
-            font-family: monospace;
-        }
-
-        .time-glow {
-            font-size: 1.5rem;
             font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-            background: linear-gradient(135deg, #ffffff, #90caf9);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 6px rgba(33,150,243,0.3);
+            color: #636e72;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
-        .status-area {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 28px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #8d9cb0;
-            letter-spacing: 1px;
-            background: rgba(0,0,0,0.15);
-        }
-
-        .sound-toggle {
-            background: rgba(255,255,255,0.08);
-            padding: 6px 16px;
-            border-radius: 32px;
-            cursor: pointer;
+        .input-group input, .input-group select {
+            padding: 14px 16px;
+            border: 1px solid #dfe6e9;
+            border-radius: 16px;
+            font-size: 1rem;
+            width: 100%;
+            background: rgba(255,255,255,0.7);
             transition: all 0.2s;
-            font-weight: 600;
-            font-size: 0.75rem;
+            color: #2d3436;
+            outline: none;
         }
-
-        .sound-toggle:active { background: rgba(255,255,255,0.2); }
-
-        /* display premium com reflexo - expandido */
-        .display-panel {
-            margin: 20px 28px;
-            background: rgba(0, 0, 0, 0.55);
-            border-radius: 44px;
-            padding: 28px 28px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 12px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3);
+        .input-group input:focus, .input-group select:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+            background: white;
         }
-
-        .history-area {
-            min-height: 42px;
-            font-size: 1.1rem;
-            color: #88a0bc;
-            text-align: right;
-            font-family: monospace;
-            letter-spacing: 0.5px;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            word-break: break-word;
-        }
-
-        .current-value {
-            font-size: 4.2rem;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            color: #f0f9ff;
-            text-align: right;
-            word-break: break-word;
-            line-height: 1.2;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
-        }
-
-        /* grade de botões - ocupa espaço flexível */
-        .buttons-grid {
+        .two-cols {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            padding: 20px 28px 35px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-add {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .btn-add:active { transform: scale(0.98); background: linear-gradient(135deg, #5b4cdb, #8c7ae6); }
+
+        .filtros {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .filtros select, .filtros input {
             flex: 1;
-            align-content: center;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid #dfe6e9;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #2d3436;
+            outline: none;
+        }
+        .filtros select:focus, .filtros input:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
         }
 
-        .btn {
-            border: none;
-            border-radius: 32px;
-            padding: 20px 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            background: rgba(20, 28, 38, 0.9);
-            color: #eef4ff;
-            transition: all 0.1s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            cursor: pointer;
-            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
+        .lista-transacoes {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 80px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .transacao-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-family: inherit;
-            letter-spacing: 0.5px;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            gap: 12px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
         }
-
-        .btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
-            filter: brightness(1.25);
+        .transacao-item:active { background: rgba(108, 92, 231, 0.03); }
+        .transacao-item:last-child { border-bottom: none; }
+        .transacao-info { flex: 1; }
+        .transacao-desc { font-weight: 600; margin-bottom: 4px; color: #2d3436; }
+        .transacao-meta {
+            font-size: 0.75rem;
+            color: #636e72;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-
-        .operator {
-            background: linear-gradient(145deg, #1e4670, #0e2a46);
-            color: #b9e2ff;
+        .transacao-valor {
             font-weight: 700;
-            box-shadow: 0 5px 0 #051a2c;
+            font-size: 1rem;
+            white-space: nowrap;
+            letter-spacing: -0.3px;
         }
-
-        .equal-btn {
-            background: linear-gradient(145deg, #2b7a4b, #1c5a38);
-            color: white;
-            grid-column: span 2;
-            box-shadow: 0 5px 0 #0e3a22;
-            font-size: 2rem;
+        .transacao-actions button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 6px;
+            color: #e17055;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
-
-        .clear-btn {
-            background: linear-gradient(145deg, #8b3c3c, #6b2a2a);
-            color: #ffe0e0;
-            box-shadow: 0 5px 0 #4a1a1a;
-        }
-
-        .special {
-            background: rgba(65, 75, 95, 0.9);
-        }
-
-        .footer-note {
+        .transacao-actions button:hover { opacity: 1; }
+        .sem-dados {
             text-align: center;
-            font-size: 0.7rem;
-            color: #4e6079;
-            padding-bottom: 20px;
-            letter-spacing: 1.5px;
-            font-weight: 400;
-            background: rgba(0,0,0,0.1);
-            padding-top: 8px;
+            padding: 40px 20px;
+            color: #b2bec3;
+            font-style: italic;
         }
-
-        /* responsivo para telas menores - botões proporcionais */
-        @media (max-width: 600px) {
-            .btn { padding: 14px 0; font-size: 1.5rem; }
-            .current-value { font-size: 3rem; }
-            .buttons-grid { gap: 10px; padding: 15px 20px 25px; }
-            .display-panel { margin: 15px 20px; padding: 20px; }
-            .calc-header { padding: 20px 20px 10px; }
-            .status-area { padding: 10px 20px; }
-            .time-glow { font-size: 1.2rem; }
-            .date-badge { font-size: 0.7rem; padding: 5px 12px; }
-        }
-
-        @media (max-width: 420px) {
-            .btn { padding: 12px 0; font-size: 1.3rem; }
-            .equal-btn { font-size: 1.6rem; }
-            .current-value { font-size: 2.5rem; }
+        footer {
+            text-align: center;
+            margin-top: 10px;
+            color: #636e72;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
+    <div class="app">
+        <h1>💰 JB Financeiro</h1>
 
-<div class="animated-bg">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-    <div class="orb orb4"></div>
-</div>
-<div class="grid-overlay"></div>
-<canvas id="particleCanvas"></canvas>
+        <!-- Cards Resumo -->
+        <div class="cards">
+            <div class="card receita">
+                <h3>Receitas</h3>
+                <div class="valor" id="totalReceitas">R$ 0</div>
+            </div>
+            <div class="card despesa">
+                <h3>Despesas</h3>
+                <div class="valor" id="totalDespesas">R$ 0</div>
+            </div>
+            <div class="card compra">
+                <h3>Compras</h3>
+                <div class="valor" id="totalCompras">R$ 0</div>
+            </div>
+            <div class="card saldo">
+                <h3>Saldo Líquido</h3>
+                <div class="valor" id="saldoLiquido">R$ 0</div>
+            </div>
+        </div>
 
-<div class="calculator-card">
-    <div class="calc-header">
-        <div class="date-badge" id="dateText">CARREGANDO...</div>
-        <div class="time-glow" id="clock">--:--:--</div>
+        <!-- Formulário expansível -->
+        <div class="form-card" id="formCard">
+            <div class="form-header" onclick="toggleFormulario()">
+                <div class="icon-toggle">+</div> Nova Transação
+            </div>
+            <div class="form-body">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Data</label>
+                        <input type="date" id="data">
+                    </div>
+                    <div class="two-cols">
+                        <div class="input-group">
+                            <label>Tipo</label>
+                            <select id="tipo">
+                                <option value="Receita">Receita</option>
+                                <option value="Compra">Compra</option>
+                                <option value="Despesa">Despesa</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Categoria</label>
+                            <input type="text" id="categoria" placeholder="Ex: Vendas, Aluguel...">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Descrição</label>
+                        <input type="text" id="descricao" placeholder="Detalhes da transação">
+                    </div>
+                    <div class="two-cols">
+                        <div class="input-group">
+                            <label>Valor R$</label>
+                            <input type="number" id="valor" step="0.01" min="0.01" placeholder="0,00">
+                        </div>
+                        <div class="input-group">
+                            <label>Pagamento</label>
+                            <select id="formaPagamento">
+                                <option>PIX</option>
+                                <option>Dinheiro</option>
+                                <option>Cartão Crédito</option>
+                                <option>Cartão Débito</option>
+                                <option>Boleto</option>
+                                <option>Transferência</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="two-cols">
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select id="status">
+                                <option>Pago/Recebido</option>
+                                <option>Pendente</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Obs</label>
+                            <input type="text" id="observacoes" placeholder="Opcional">
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="adicionarTransacao()">✅ Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtros">
+            <select id="filtroTipo" onchange="renderizarLista()">
+                <option value="Todos">Todos</option>
+                <option value="Receita">Receitas</option>
+                <option value="Compra">Compras</option>
+                <option value="Despesa">Despesas</option>
+            </select>
+            <input type="text" id="filtroBusca" placeholder="Buscar..." oninput="renderizarLista()">
+        </div>
+
+        <!-- Lista de Transações -->
+        <div class="lista-transacoes" id="listaTransacoes">
+            <div class="sem-dados">Nenhuma transação</div>
+        </div>
+        <footer>✨ Seus dados ficam salvos no aparelho</footer>
     </div>
-    <div class="status-area">
-        <span>⚡ NEXUS MODE • FULLSCREEN</span>
-        <span class="sound-toggle" id="soundToggle">🔊 SOM ON</span>
-    </div>
 
-    <div class="display-panel">
-        <div class="history-area" id="history"></div>
-        <div class="current-value" id="display">0</div>
-    </div>
+    <!-- Botão flutuante -->
+    <button class="btn-flutuante" onclick="toggleFormulario()" title="Nova transação">+</button>
 
-    <div class="buttons-grid">
-        <!-- Linha 1 -->
-        <button class="btn clear-btn" data-action="clear">AC</button>
-        <button class="btn special" data-action="backspace">⌫</button>
-        <button class="btn operator" data-op="/">÷</button>
-        <button class="btn operator" data-op="*">×</button>
-        <!-- Linha 2 -->
-        <button class="btn" data-num="7">7</button>
-        <button class="btn" data-num="8">8</button>
-        <button class="btn" data-num="9">9</button>
-        <button class="btn operator" data-op="-">–</button>
-        <!-- Linha 3 -->
-        <button class="btn" data-num="4">4</button>
-        <button class="btn" data-num="5">5</button>
-        <button class="btn" data-num="6">6</button>
-        <button class="btn operator" data-op="+">+</button>
-        <!-- Linha 4 -->
-        <button class="btn" data-num="1">1</button>
-        <button class="btn" data-num="2">2</button>
-        <button class="btn" data-num="3">3</button>
-        <button class="btn" data-num=".">.</button>
-        <!-- Linha 5 -->
-        <button class="btn" data-num="0">0</button>
-        <button class="btn equal-btn" data-action="equal">=</button>
-    </div>
-    <div class="footer-note">CRYSTAL ENGINE v3.0 • TOUCH OPTIMIZED</div>
-</div>
+    <script>
+        // ==================== GERADOR DE ÍCONES E MANIFEST INLINE ====================
+        function gerarIconeBase64(tamanho, corFundo, corTexto) {
+            const canvas = document.createElement('canvas');
+            canvas.width = tamanho;
+            canvas.height = tamanho;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(tamanho/2, tamanho/2, tamanho/2 - 4, 0, 2*Math.PI);
+            ctx.fillStyle = corFundo;
+            ctx.fill();
+            ctx.fillStyle = corTexto;
+            ctx.font = `bold ${tamanho*0.5}px "Inter"`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('JB', tamanho/2, tamanho/2);
+            return canvas.toDataURL('image/png');
+        }
 
-<script>
-    // ------------------------------------------------
-    // DOM Elements
-    // ------------------------------------------------
-    const displayElem = document.getElementById('display');
-    const historyElem = document.getElementById('history');
-    const soundToggleBtn = document.getElementById('soundToggle');
-    
-    let currentInput = "0";
-    let lastExpression = "";
-    let soundEnabled = true;
-    let audioContext = null;
+        const icon192 = gerarIconeBase64(192, '#6c5ce7', '#ffffff');
+        const icon512 = gerarIconeBase64(512, '#6c5ce7', '#ffffff');
 
-    // sound system otimizado (beep curto e elegante)
-    function playClick() {
-        if (!soundEnabled) return;
-        try {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const manifestData = {
+            name: 'JB Financeiro',
+            short_name: 'JB Financeiro',
+            description: 'Gerencie compras, despesas e receitas',
+            start_url: location.href,
+            display: 'standalone',
+            background_color: '#f5f7fa',
+            theme_color: '#6c5ce7',
+            icons: [
+                { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+                { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        const linkManifest = document.createElement('link');
+        linkManifest.rel = 'manifest';
+        linkManifest.href = manifestURL;
+        document.head.appendChild(linkManifest);
+
+        // ==================== SERVICE WORKER INLINE ====================
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'jb-financeiro-v1';
+                const ASSETS = ['${location.href}'];
+                self.addEventListener('install', e => {
+                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+                });
+                self.addEventListener('activate', e => {
+                    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))));
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
+                        if(resp.ok) {
+                            const clone = resp.clone();
+                            caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+                        }
+                        return resp;
+                    })));
+                });
+            `;
+            const swBlob = new Blob([swCode], {type: 'application/javascript'});
+            const swURL = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swURL, {scope: '/'})
+                .then(() => console.log('SW registrado'))
+                .catch(err => console.log('SW erro:', err));
+        }
+
+        // ==================== LÓGICA DO FORMULÁRIO EXPANSÍVEL ====================
+        function toggleFormulario() {
+            const card = document.getElementById('formCard');
+            const icon = card.querySelector('.icon-toggle');
+            if (card.classList.contains('aberto')) {
+                card.classList.remove('aberto');
+                icon.textContent = '+';
+            } else {
+                card.classList.add('aberto');
+                icon.textContent = '−';
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-            // garantir que o contexto esteja ativo (resume automatico)
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = 880;
-            gainNode.gain.value = 0.12;
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-            osc.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            osc.start();
-            osc.stop(now + 0.1);
-        } catch(e) { console.warn("audio error", e); }
-    }
-
-    // atualizar display principal
-    function updateMainDisplay() {
-        displayElem.innerText = currentInput;
-    }
-
-    // validar e sanitizar
-    function sanitizeExpression(expr) {
-        expr = expr.replace(/×/g, '*').replace(/÷/g, '/');
-        // evitar múltiplos operadores consecutivos
-        expr = expr.replace(/([+\-*/])\s*([+\-*/])/g, (match, p1, p2) => p2);
-        // evitar começar com operador exceto - (negativo)
-        if (/^[+*/]/.test(expr)) expr = expr.slice(1);
-        // substituir . por 0. se for inicial isolado
-        if (expr === '.') expr = '0.';
-        return expr;
-    }
-
-    function addNum(value) {
-        playClick();
-        if (currentInput === "Erro") {
-            currentInput = "0";
         }
-        if (currentInput === "0" && value !== '.') {
-            currentInput = value;
-        } else if (value === '.' && currentInput.includes('.')) {
-            return;
-        } else if (currentInput.length < 24) {
-            currentInput += value;
-        }
-        updateMainDisplay();
-    }
 
-    function addOperator(op) {
-        playClick();
-        if (currentInput === "Erro") currentInput = "0";
-        const lastChar = currentInput.slice(-1);
-        const operators = ['+', '-', '*', '/', '×', '÷'];
-        if (operators.includes(lastChar)) {
-            // substituir ultimo operador
-            currentInput = currentInput.slice(0, -1) + op;
-        } else {
-            currentInput += op;
-        }
-        updateMainDisplay();
-    }
+        // ==================== LÓGICA FINANCEIRA ====================
+        const STORAGE_KEY = 'jb_financeiro_transacoes';
+        let transacoes = [];
 
-    function clearAll() {
-        playClick();
-        currentInput = "0";
-        historyElem.innerText = "";
-        updateMainDisplay();
-    }
+        function carregar() {
+            const dados = localStorage.getItem(STORAGE_KEY);
+            transacoes = dados ? JSON.parse(dados) : [
+                { data:'2026-01-01', tipo:'Receita', categoria:'Vendas', descricao:'Venda online', valor:5000, formaPagamento:'PIX', status:'Pago/Recebido', observacoes:'' },
+                { data:'2026-01-02', tipo:'Compra', categoria:'Estoque', descricao:'Fornecedor', valor:1200, formaPagamento:'Boleto', status:'Pago/Recebido', observacoes:'' },
+                { data:'2026-01-03', tipo:'Despesa', categoria:'Aluguel', descricao:'Sala comercial', valor:800, formaPagamento:'Transferência', status:'Pago/Recebido', observacoes:'' }
+            ];
+            salvar();
+        }
 
-    function backspace() {
-        playClick();
-        if (currentInput === "Erro") {
-            currentInput = "0";
-        } else if (currentInput.length > 1) {
-            currentInput = currentInput.slice(0, -1);
-            if (currentInput === "") currentInput = "0";
-        } else {
-            currentInput = "0";
-        }
-        updateMainDisplay();
-    }
+        function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(transacoes)); }
 
-    function calculateResult() {
-        playClick();
-        if (currentInput === "Erro") {
-            currentInput = "0";
-            updateMainDisplay();
-            return;
+        function totais() {
+            let r=0, c=0, d=0;
+            transacoes.forEach(t => {
+                if(t.tipo === 'Receita') r += t.valor;
+                else if(t.tipo === 'Compra') c += t.valor;
+                else d += t.valor;
+            });
+            return { r, c, d, saldo: r - c - d };
         }
-        let expr = currentInput;
-        if (expr.trim() === "") {
-            return;
+
+        function formatMoeda(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+
+        function atualizarDashboard() {
+            const {r, c, d, saldo} = totais();
+            document.getElementById('totalReceitas').textContent = formatMoeda(r);
+            document.getElementById('totalCompras').textContent = formatMoeda(c);
+            document.getElementById('totalDespesas').textContent = formatMoeda(d);
+            document.getElementById('saldoLiquido').textContent = formatMoeda(saldo);
         }
-        try {
-            let sanitized = sanitizeExpression(expr);
-            if (/[+\-*/]$/.test(sanitized)) {
-                sanitized = sanitized.slice(0, -1);
-            }
-            if (sanitized === "") {
+
+        function adicionarTransacao() {
+            const data = document.getElementById('data').value;
+            const tipo = document.getElementById('tipo').value;
+            const categoria = document.getElementById('categoria').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const valor = parseFloat(document.getElementById('valor').value);
+            const formaPagamento = document.getElementById('formaPagamento').value;
+            const status = document.getElementById('status').value;
+            const observacoes = document.getElementById('observacoes').value.trim();
+
+            if(!data || !categoria || !descricao || isNaN(valor) || valor <= 0) {
+                alert('Preencha todos os campos obrigatórios.');
                 return;
             }
-            const result = new Function(`return (${sanitized})`)();
-            if (!isFinite(result) || isNaN(result)) {
-                throw new Error('Math error');
+            transacoes.push({data, tipo, categoria, descricao, valor, formaPagamento, status, observacoes});
+            salvar();
+            limparForm();
+            renderizarLista();
+            atualizarDashboard();
+            // Fecha o formulário automaticamente após adicionar
+            const card = document.getElementById('formCard');
+            if (card.classList.contains('aberto')) {
+                toggleFormulario();
             }
-            historyElem.innerText = currentInput + " =";
-            let finalResult;
-            if (Number.isInteger(result)) {
-                finalResult = result.toString();
-            } else {
-                finalResult = parseFloat(result.toFixed(10)).toString();
-                if (finalResult.includes('e')) finalResult = result.toFixed(8);
-            }
-            currentInput = finalResult;
-        } catch (error) {
-            currentInput = "Erro";
-            historyElem.innerText = expr + "  ⟶  erro";
         }
-        updateMainDisplay();
-    }
 
-    // eventos delegados para desempenho e responsividade
-    function handleButtonClick(e) {
-        let target = e.target.closest('.btn');
-        if (!target) return;
-        
-        const numVal = target.getAttribute('data-num');
-        const opVal = target.getAttribute('data-op');
-        const action = target.getAttribute('data-action');
-        
-        if (numVal !== null) {
-            addNum(numVal);
-        } else if (opVal !== null) {
-            addOperator(opVal);
-        } else if (action === 'clear') {
-            clearAll();
-        } else if (action === 'backspace') {
-            backspace();
-        } else if (action === 'equal') {
-            calculateResult();
+        function limparForm() {
+            document.getElementById('categoria').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('valor').value = '';
+            document.getElementById('observacoes').value = '';
         }
-    }
-    
-    document.querySelector('.buttons-grid').addEventListener('click', handleButtonClick);
-    
-    // toggle sonoro profissional
-    soundToggleBtn.addEventListener('click', () => {
-        soundEnabled = !soundEnabled;
-        soundToggleBtn.innerHTML = soundEnabled ? "🔊 SOM ON" : "🔇 SOM OFF";
-        playClick(); // feedback ao mudar (se mudo não toca)
-        if (soundEnabled && audioContext && audioContext.state === 'suspended') {
-            audioContext.resume();
+
+        function excluir(index) {
+            if(confirm('Excluir transação?')) {
+                transacoes.splice(index, 1);
+                salvar();
+                renderizarLista();
+                atualizarDashboard();
+            }
         }
-    });
-    
-    // relógio e data atualizados com animação sutil
-    function updateDateTime() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('pt-BR', { hour12: false });
-        document.getElementById('clock').innerText = timeStr;
-        const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-        const dateFormatted = now.toLocaleDateString('pt-BR', options).replace('.', '').toUpperCase();
-        document.getElementById('dateText').innerHTML = dateFormatted;
-    }
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-    
-    // =======================================================
-    // PARTÍCULAS ANIMADAS SOBRE O FUNDO (efeito profissional)
-    // =======================================================
-    const canvas = document.getElementById('particleCanvas');
-    let ctx = canvas.getContext('2d');
-    let particles = [];
-    let animationFrame;
-    
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2.5 + 0.8;
-            this.speedX = (Math.random() - 0.5) * 0.35;
-            this.speedY = (Math.random() - 0.5) * 0.25 + 0.1;
-            this.opacity = Math.random() * 0.45 + 0.1;
-            this.color = `rgba(100, 180, 250, ${this.opacity})`;
+
+        function renderizarLista() {
+            const filtroTipo = document.getElementById('filtroTipo').value;
+            const busca = document.getElementById('filtroBusca').value.toLowerCase();
+            const container = document.getElementById('listaTransacoes');
+
+            let filtradas = transacoes.filter(t => {
+                const tipoOk = filtroTipo === 'Todos' || t.tipo === filtroTipo;
+                const buscaOk = t.descricao.toLowerCase().includes(busca) || t.categoria.toLowerCase().includes(busca);
+                return tipoOk && buscaOk;
+            });
+
+            if(filtradas.length === 0) {
+                container.innerHTML = '<div class="sem-dados">Nenhuma transação encontrada</div>';
+                return;
+            }
+
+            filtradas.sort((a,b) => new Date(b.data) - new Date(a.data));
+            let html = '';
+            filtradas.forEach(t => {
+                const idx = transacoes.indexOf(t);
+                const corValor = t.tipo === 'Receita' ? '#00b894' : (t.tipo === 'Compra' ? '#e17055' : '#d63031');
+                const sinal = t.tipo === 'Receita' ? '+' : '-';
+                html += `
+                    <div class="transacao-item">
+                        <div class="transacao-info">
+                            <div class="transacao-desc">${t.descricao}</div>
+                            <div class="transacao-meta">
+                                <span>${t.data.split('-').reverse().join('/')}</span>
+                                <span>${t.categoria}</span>
+                                <span>${t.status}</span>
+                            </div>
+                        </div>
+                        <div class="transacao-valor" style="color:${corValor}">
+                            ${sinal}${formatMoeda(t.valor)}
+                        </div>
+                        <div class="transacao-actions">
+                            <button onclick="excluir(${idx})" title="Excluir">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x < -20) this.x = canvas.width + 20;
-            if (this.x > canvas.width + 20) this.x = -20;
-            if (this.y < -20) this.y = canvas.height + 20;
-            if (this.y > canvas.height + 20) this.y = -20;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-        }
-    }
-    
-    function initParticles() {
-        particles = [];
-        const particleCount = Math.min(100, Math.floor(window.innerWidth / 10));
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-    }
-    
-    function animateParticles() {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let p of particles) {
-            p.update();
-            p.draw();
-        }
-        animationFrame = requestAnimationFrame(animateParticles);
-    }
-    
-    function handleResize() {
-        resizeCanvas();
-        initParticles();
-    }
-    
-    window.addEventListener('resize', () => {
-        handleResize();
-    });
-    
-    // iniciar sistema de partículas com transição suave
-    resizeCanvas();
-    initParticles();
-    animateParticles();
-    
-    // garantir contexto de áudio ativo na primeira interação (mobile)
-    const resumeAudioOnFirstTouch = () => {
-        if (audioContext && audioContext.state === 'suspended') {
-            audioContext.resume();
-        }
-        document.body.removeEventListener('touchstart', resumeAudioOnFirstTouch);
-        document.body.removeEventListener('click', resumeAudioOnFirstTouch);
-    };
-    document.body.addEventListener('touchstart', resumeAudioOnFirstTouch);
-    document.body.addEventListener('click', resumeAudioOnFirstTouch);
-    
-    // suporte a teclado físico (com responsividade)
-    window.addEventListener('keydown', (e) => {
-        const key = e.key;
-        if ((key >= '0' && key <= '9') || key === '.') {
-            e.preventDefault();
-            addNum(key);
-        } else if (key === '+' || key === '-' || key === '*' || key === '/') {
-            e.preventDefault();
-            let opMap = { '+': '+', '-': '-', '*': '×', '/': '÷' };
-            addOperator(opMap[key] || key);
-        } else if (key === 'Enter' || key === '=') {
-            e.preventDefault();
-            calculateResult();
-        } else if (key === 'Backspace') {
-            e.preventDefault();
-            backspace();
-        } else if (key === 'Escape' || key === 'Delete') {
-            e.preventDefault();
-            clearAll();
-        }
-    });
-    
-    // pequeno brilho intermitente no display (efeito suave)
-    setInterval(() => {
-        if (soundEnabled && audioContext && audioContext.state !== 'running') {
-            // apenas manutenção silenciosa
-        }
-    }, 8000);
-</script>
+
+        window.onload = () => {
+            carregar();
+            renderizarLista();
+            atualizarDashboard();
+            document.getElementById('data').value = new Date().toISOString().split('T')[0];
+        };
+    </script>
 </body>
-</html>  
+</html>

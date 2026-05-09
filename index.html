@@ -17,6 +17,7 @@
             padding: 0;
             font-family: 'Inter', sans-serif;
         }
+        
         body {
             background: #0a0a0a;
             color: #e0e0e0;
@@ -25,12 +26,54 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
         }
+        
+        /* ========== BACKGROUND ANIMADO COM DEGRADÊ ========== */
+        .bg-animado {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460, #1a1a2e, #0a0a0a);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Partículas flutuantes */
+        .particula {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(108, 92, 231, 0.1);
+            z-index: 0;
+            pointer-events: none;
+            animation: flutuar 8s ease-in-out infinite;
+        }
+        
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+            50% { transform: translateY(-10px) translateX(-10px); opacity: 0.4; }
+            75% { transform: translateY(-30px) translateX(5px); opacity: 0.5; }
+        }
+        
         .app {
             width: 100%;
             max-width: 500px;
             padding: 10px 16px 30px;
+            position: relative;
+            z-index: 1;
         }
         h1 {
             text-align: center;
@@ -43,6 +86,7 @@
             justify-content: center;
             gap: 8px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
         }
 
         /* ========== CARDS RESUMO ========== */
@@ -53,15 +97,15 @@
             margin-bottom: 20px;
         }
         .card {
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(30, 30, 40, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 18px;
             padding: 14px 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:active { transform: scale(0.97); }
         .card h3 {
@@ -77,18 +121,29 @@
             font-weight: 700;
             line-height: 1.2;
         }
+        .receita {
+            border-top: 2px solid #00e676;
+        }
         .receita h3 { color: #00e676; }
         .receita .valor { color: #00e676; }
+        .despesa {
+            border-top: 2px solid #ff6b6b;
+        }
         .despesa h3 { color: #ff6b6b; }
         .despesa .valor { color: #ff6b6b; }
+        .compra {
+            border-top: 2px solid #ffd93d;
+        }
         .compra h3 { color: #ffd93d; }
         .compra .valor { color: #ff6b6b; }
         .saldo {
             grid-column: span 2;
-            background: linear-gradient(135deg, #6c5ce7 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             color: white;
             border: none;
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.25);
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         .saldo h3 { color: rgba(255,255,255,0.8); }
         .saldo .valor { color: white; font-size: 1.8rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
@@ -100,9 +155,9 @@
             width: 56px;
             height: 56px;
             border-radius: 28px;
-            background: linear-gradient(135deg, #6c5ce7 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
             color: white;
-            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5), 0 0 0 3px rgba(108, 92, 231, 0.1);
             border: none;
             font-size: 28px;
             display: flex;
@@ -111,22 +166,29 @@
             z-index: 100;
             cursor: pointer;
             transition: all 0.3s ease;
+            animation: pulse 3s ease-in-out infinite;
         }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5), 0 0 0 3px rgba(108, 92, 231, 0.1); }
+            50% { box-shadow: 0 8px 30px rgba(108, 92, 231, 0.7), 0 0 0 8px rgba(108, 92, 231, 0.05); }
+        }
+        
         .btn-flutuante:hover {
             transform: scale(1.05);
-            box-shadow: 0 12px 30px rgba(108, 92, 231, 0.5);
+            box-shadow: 0 12px 30px rgba(108, 92, 231, 0.6);
         }
         .btn-flutuante:active { transform: scale(0.9); }
 
         .form-card {
-            background: rgba(30, 30, 30, 0.85);
+            background: rgba(30, 30, 40, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
             margin-bottom: 20px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .form-header {
@@ -147,7 +209,7 @@
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6c5ce7, #8b5cf6);
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
             color: white;
             display: flex;
             align-items: center;
@@ -158,6 +220,7 @@
         }
         .form-card.aberto .form-header {
             border-bottom: 1px solid rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.05);
         }
         .form-card.aberto .form-header .icon-toggle {
             transform: rotate(45deg);
@@ -189,11 +252,11 @@
         }
         .input-group input, .input-group select {
             padding: 12px 14px;
-            border: 1px solid #333;
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 14px;
             font-size: 0.95rem;
             width: 100%;
-            background: rgba(20, 20, 20, 0.8);
+            background: rgba(20, 20, 30, 0.8);
             transition: all 0.2s;
             color: #e0e0e0;
             outline: none;
@@ -202,7 +265,7 @@
         .input-group input:focus, .input-group select:focus {
             border-color: #6c5ce7;
             box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
-            background: rgba(25, 25, 25, 0.9);
+            background: rgba(25, 25, 35, 0.9);
         }
         .two-cols {
             display: grid;
@@ -210,7 +273,7 @@
             gap: 10px;
         }
         .btn-add {
-            background: linear-gradient(135deg, #6c5ce7 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
             color: white;
             border: none;
             padding: 14px;
@@ -226,18 +289,18 @@
         }
         .btn-add:active { 
             transform: scale(0.98); 
-            background: linear-gradient(135deg, #5b4cdb, #7c3aed); 
+            background: linear-gradient(135deg, #5b4cdb, #8c7ae6); 
         }
 
         /* ========== LISTA DE TRANSAÇÕES (OCULTÁVEL) ========== */
         .lista-container {
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(30, 30, 40, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
             overflow: hidden;
         }
         .lista-cabecalho {
@@ -259,7 +322,7 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.25);
             color: #a29bfe;
             display: flex;
             align-items: center;
@@ -276,7 +339,7 @@
             font-size: 0.9rem;
         }
         .lista-contador {
-            background: rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.25);
             color: #a29bfe;
             padding: 4px 10px;
             border-radius: 20px;
@@ -300,9 +363,9 @@
             flex: 1;
             padding: 10px 14px;
             border-radius: 12px;
-            border: 1px solid #333;
+            border: 1px solid rgba(255,255,255,0.1);
             font-size: 0.82rem;
-            background: rgba(20, 20, 20, 0.8);
+            background: rgba(20, 20, 30, 0.8);
             color: #e0e0e0;
             outline: none;
         }
@@ -356,21 +419,21 @@
         .sem-dados {
             text-align: center;
             padding: 35px 20px;
-            color: #555;
+            color: #666;
             font-style: italic;
             font-size: 0.9rem;
         }
 
         /* ========== CALENDÁRIO EM BAIXO ========== */
         .calendario-container {
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(30, 30, 40, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 14px;
             margin-bottom: 80px;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
         }
         .calendario-header {
             display: flex;
@@ -440,21 +503,22 @@
             color: #ccc;
         }
         .calendario-dia:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(108, 92, 231, 0.1);
         }
         .calendario-dia.outro-mes {
             color: #444;
             pointer-events: none;
         }
         .calendario-dia.hoje {
-            background: rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.25);
             color: #a29bfe;
             font-weight: 700;
+            box-shadow: 0 0 10px rgba(108, 92, 231, 0.15);
         }
         .calendario-dia.selecionado {
-            background: #6c5ce7 !important;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe) !important;
             color: white !important;
-            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.5);
         }
         .calendario-dia.tem-lancamento::after {
             content: '';
@@ -463,13 +527,13 @@
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            background: #6c5ce7;
+            background: #a29bfe;
+            box-shadow: 0 0 6px rgba(108, 92, 231, 0.5);
         }
         .calendario-dia.selecionado.tem-lancamento::after {
             background: white;
         }
         
-        /* ========== INFORMAÇÃO DO DIA SELECIONADO ========== */
         .info-dia-selecionado {
             display: flex;
             justify-content: space-between;
@@ -505,16 +569,23 @@
         }
         
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
     </style>
 </head>
 <body>
+    <!-- Background animado -->
+    <div class="bg-animado"></div>
+    <div class="particula" style="width: 100px; height: 100px; top: 10%; left: 5%;"></div>
+    <div class="particula" style="width: 150px; height: 150px; top: 50%; right: 10%; animation-delay: -3s; background: rgba(0, 230, 118, 0.08);"></div>
+    <div class="particula" style="width: 80px; height: 80px; bottom: 20%; left: 15%; animation-delay: -5s; background: rgba(255, 107, 107, 0.06);"></div>
+    <div class="particula" style="width: 120px; height: 120px; top: 30%; right: 5%; animation-delay: -7s; background: rgba(162, 155, 254, 0.07);"></div>
+    
     <div class="app">
         <h1>💰 JB Financeiro</h1>
 
-        <!-- ========== CARDS RESUMO ========== -->
+        <!-- Cards Resumo -->
         <div class="cards">
             <div class="card receita">
                 <h3>Receitas</h3>
@@ -534,7 +605,7 @@
             </div>
         </div>
 
-        <!-- ========== FORMULÁRIO EXPANSÍVEL ========== -->
+        <!-- Formulário expansível -->
         <div class="form-card" id="formCard">
             <div class="form-header" onclick="toggleFormulario()">
                 <div class="icon-toggle">+</div> Nova Transação
@@ -598,7 +669,7 @@
             </div>
         </div>
 
-        <!-- ========== LISTA DE TRANSAÇÕES (OCULTÁVEL) ========== -->
+        <!-- Lista de transações ocultável -->
         <div class="lista-container aberto" id="listaContainer">
             <div class="lista-cabecalho" onclick="toggleLista()">
                 <div class="lista-cabecalho-esquerda">
@@ -623,7 +694,7 @@
             </div>
         </div>
 
-        <!-- ========== CALENDÁRIO EM BAIXO ========== -->
+        <!-- Calendário em baixo -->
         <div class="calendario-container">
             <div class="calendario-header">
                 <button onclick="mudarMes(-1)" title="Mês anterior">◀</button>
@@ -646,11 +717,10 @@
         <footer>✨ Seus dados ficam salvos no aparelho</footer>
     </div>
 
-    <!-- Botão flutuante -->
     <button class="btn-flutuante" onclick="toggleFormulario()" title="Nova transação">+</button>
 
     <script>
-        // ==================== GERADOR DE ÍCONES E MANIFEST INLINE ====================
+        // Gerador de ícones e manifest inline
         function gerarIconeBase64(tamanho, corFundo, corTexto) {
             const canvas = document.createElement('canvas');
             canvas.width = tamanho;
@@ -692,10 +762,10 @@
         linkManifest.href = manifestURL;
         document.head.appendChild(linkManifest);
 
-        // ==================== SERVICE WORKER INLINE ====================
+        // Service Worker inline
         if ('serviceWorker' in navigator) {
             const swCode = `
-                const CACHE_NAME = 'jb-financeiro-v7';
+                const CACHE_NAME = 'jb-financeiro-v8';
                 const ASSETS = ['${location.href}'];
                 self.addEventListener('install', e => {
                     e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
@@ -720,7 +790,7 @@
                 .catch(err => console.log('SW erro:', err));
         }
 
-        // ==================== VARIÁVEIS GLOBAIS ====================
+        // Variáveis globais
         const STORAGE_KEY = 'jb_financeiro_transacoes';
         const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -731,7 +801,7 @@
         let diaSelecionado = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate());
         let dataSelecionadaStr = formatarDataISO(diaSelecionado);
 
-        // ==================== FUNÇÕES DA LISTA OCULTÁVEL ====================
+        // Funções da lista ocultável
         function toggleLista() {
             const container = document.getElementById('listaContainer');
             container.classList.toggle('aberto');
@@ -744,7 +814,7 @@
             }
         }
 
-        // ==================== FUNÇÕES DO CALENDÁRIO ====================
+        // Funções do calendário
         function formatarDataISO(data) {
             const ano = data.getFullYear();
             const mes = String(data.getMonth() + 1).padStart(2, '0');
@@ -857,7 +927,7 @@
             grid.innerHTML = html;
         }
 
-        // ==================== LÓGICA DO FORMULÁRIO EXPANSÍVEL ====================
+        // Lógica do formulário expansível
         function toggleFormulario() {
             const card = document.getElementById('formCard');
             const icon = card.querySelector('.icon-toggle');
@@ -871,10 +941,9 @@
             }
         }
 
-        // ==================== LÓGICA FINANCEIRA ====================
+        // Lógica financeira
         function carregar() {
             const dados = localStorage.getItem(STORAGE_KEY);
-            // Se existir dados salvos, carrega; se não, inicia com array vazio
             transacoes = dados ? JSON.parse(dados) : [];
             salvar();
         }

@@ -265,22 +265,6 @@
             margin-bottom: 16px;
             text-align: center;
         }
-        .modal-fechar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
         .input-group {
             display: flex;
@@ -478,7 +462,7 @@
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             padding: 14px;
-            margin-bottom: 70px;
+            margin-bottom: 16px;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -563,6 +547,118 @@
             background: #00e676;
         }
         .calendario-dia.selecionado.tem-lancamento::after { background: #000; }
+
+        /* Calculadora (ocultável) */
+        .calculadora-wrapper {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 70px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .calc-cabecalho {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .calc-cabecalho:hover { background: rgba(255,255,255,0.03); }
+        .calc-cabecalho-esquerda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .calc-seta {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .calculadora-wrapper.aberto .calc-seta {
+            transform: rotate(90deg);
+        }
+        .calc-cabecalho-titulo {
+            font-weight: 600;
+            color: #ddd;
+            font-size: 0.88rem;
+        }
+        .calc-conteudo {
+            display: none;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 14px 14px 16px;
+        }
+        .calculadora-wrapper.aberto .calc-conteudo {
+            display: block;
+        }
+        .calc-display {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: right;
+            margin-bottom: 10px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .calc-display-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-all;
+            line-height: 1.2;
+        }
+        .calc-botoes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .calc-btn {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: rgba(255,255,255,0.06);
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            min-width: 0;
+        }
+        .calc-btn:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.12);
+        }
+        .calc-btn.operador {
+            background: rgba(0,180,148,0.15);
+            color: #00b894;
+            font-weight: 600;
+        }
+        .calc-btn.operador:active {
+            background: rgba(0,180,148,0.3);
+        }
+        .calc-btn.igual {
+            background: linear-gradient(135deg, #00b894, #00e676);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,180,148,0.3);
+        }
+        .calc-btn.igual:active {
+            box-shadow: 0 2px 5px rgba(0,180,148,0.5);
+        }
+        .calc-btn.zero {
+            grid-column: span 2;
+            aspect-ratio: auto;
+            height: auto;
+        }
 
         footer {
             text-align: center;
@@ -654,6 +750,46 @@
                 <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
             </div>
             <div class="calendario-grid" id="calendarioGrid"></div>
+        </div>
+
+        <!-- Calculadora Ocultável -->
+        <div class="calculadora-wrapper" id="calcWrapper">
+            <div class="calc-cabecalho" onclick="toggleCalculadora()">
+                <div class="calc-cabecalho-esquerda">
+                    <span class="calc-seta">▶</span>
+                    <span class="calc-cabecalho-titulo">🧮 Calculadora</span>
+                </div>
+            </div>
+            <div class="calc-conteudo">
+                <div class="calc-display">
+                    <div class="calc-display-text" id="calcDisplay">0</div>
+                </div>
+                <div class="calc-botoes">
+                    <button class="calc-btn operador" onclick="calcClear()">C</button>
+                    <button class="calc-btn operador" onclick="calcAppend('(')">(</button>
+                    <button class="calc-btn operador" onclick="calcAppend(')')">)</button>
+                    <button class="calc-btn operador" onclick="calcAppend('/')">÷</button>
+                    
+                    <button class="calc-btn" onclick="calcAppend('7')">7</button>
+                    <button class="calc-btn" onclick="calcAppend('8')">8</button>
+                    <button class="calc-btn" onclick="calcAppend('9')">9</button>
+                    <button class="calc-btn operador" onclick="calcAppend('*')">×</button>
+                    
+                    <button class="calc-btn" onclick="calcAppend('4')">4</button>
+                    <button class="calc-btn" onclick="calcAppend('5')">5</button>
+                    <button class="calc-btn" onclick="calcAppend('6')">6</button>
+                    <button class="calc-btn operador" onclick="calcAppend('-')">−</button>
+                    
+                    <button class="calc-btn" onclick="calcAppend('1')">1</button>
+                    <button class="calc-btn" onclick="calcAppend('2')">2</button>
+                    <button class="calc-btn" onclick="calcAppend('3')">3</button>
+                    <button class="calc-btn operador" onclick="calcAppend('+')">+</button>
+                    
+                    <button class="calc-btn zero" onclick="calcAppend('0')">0</button>
+                    <button class="calc-btn" onclick="calcAppend('.')">.</button>
+                    <button class="calc-btn igual" onclick="calcCalcular()">=</button>
+                </div>
+            </div>
         </div>
 
         <footer>✨ Seus dados ficam salvos no aparelho</footer>
@@ -764,7 +900,7 @@
 
         if ('serviceWorker' in navigator) {
             const swCode = `
-                const CACHE_NAME = 'jb-financeiro-v11';
+                const CACHE_NAME = 'jb-financeiro-v13';
                 const ASSETS = ['${location.href}'];
                 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))); });
                 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); });
@@ -800,6 +936,46 @@
         }
         function abrirLista() {
             document.getElementById('listaContainer').classList.add('aberto');
+        }
+
+        // ==================== CALCULADORA ====================
+        function toggleCalculadora() {
+            document.getElementById('calcWrapper').classList.toggle('aberto');
+        }
+
+        let calcExpression = '';
+        const calcDisplay = document.getElementById('calcDisplay');
+
+        function calcAppend(value) {
+            let val = value;
+            if (value === '×') val = '*';
+            if (value === '÷') val = '/';
+            if (value === '−') val = '-';
+            calcExpression += val;
+            calcDisplay.textContent = calcExpression.replace(/\*/g, '×').replace(/\//g, '÷');
+        }
+
+        function calcClear() {
+            calcExpression = '';
+            calcDisplay.textContent = '0';
+        }
+
+        function calcCalcular() {
+            try {
+                let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+                const result = Function('"use strict"; return (' + expr + ')')();
+                if (result === undefined || isNaN(result) || !isFinite(result)) {
+                    calcDisplay.textContent = 'Erro';
+                    calcExpression = '';
+                } else {
+                    let formatted = Number(result).toLocaleString('pt-BR', { maximumFractionDigits: 10 });
+                    calcDisplay.textContent = formatted;
+                    calcExpression = result.toString();
+                }
+            } catch (e) {
+                calcDisplay.textContent = 'Erro';
+                calcExpression = '';
+            }
         }
 
         // ==================== CALENDÁRIO ====================
@@ -971,6 +1147,7 @@
             });
             container.innerHTML = html;
         }
+
         window.onload = () => {
             carregar();
             document.getElementById('data').value = dataSelecionadaStr;
